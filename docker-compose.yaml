@@ -1,0 +1,51 @@
+version: "3.9"
+services:
+  db:
+    image: postgres
+    networks: 
+      zabbix-network:
+        ipv4_address: 10.0.0.1
+    container_name: postgres-server
+    restart: always
+    environment:
+      POSTGRES_USER: zabbix
+      POSTGRES_PASSWORD: zabbix@545416
+      POSTGRES_DB: zabbix
+  srv:
+    image: zabbix/zabbix-server-pgsql:alpine-5.2-latest
+    networks: 
+      zabbix-network:
+        ipv4_address: 10.0.0.2
+    container_name: zabbix-server-pgsql
+    restart: always
+    environment: 
+      DB_SERVER_HOST: 10.0.0.1
+      POSTGRES_USER: zabbix
+      POSTGRES_PASSWORD: zabbix@545416
+      POSTGRES_DB: zabbix
+  web:
+    image: zabbix/zabbix-web-nginx-pgsql:alpine-5.2-latest
+    networks: 
+      zabbix-network:
+        ipv4_address: 10.0.0.3
+    container_name: zabbix-web-nginx-pgsql
+    restart: always
+    environment: 
+      ZBX_SERVER_HOST: 10.0.0.2
+      DB_SERVER_HOST: 10.0.0.1
+      POSTGRES_USER: zabbix
+      POSTGRES_PASSWORD: zabbix@545416
+      POSTGRES_DB: zabbix
+      PHP_TZ: America/Cuiaba
+    ports: 
+      - 443:8443
+      - 80:8080
+
+networks:
+  zabbix-network:
+    ipam:
+      driver: default
+      config:
+        - subnet: "10.0.0.0/24"
+          gateway: "10.0.0.254"
+        
