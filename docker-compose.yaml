@@ -11,6 +11,9 @@ services:
       POSTGRES_USER: zabbix
       POSTGRES_PASSWORD: zabbix@545416
       POSTGRES_DB: zabbix
+    volumes:
+      - ./db/db:/var/lib/postgresql/data/:rw
+      - ./backup/:/data/wwwroot/zabbix:rw
   srv:
     image: zabbix/zabbix-server-pgsql:alpine-5.2-latest
     networks: 
@@ -23,6 +26,7 @@ services:
       POSTGRES_USER: zabbix
       POSTGRES_PASSWORD: zabbix@545416
       POSTGRES_DB: zabbix
+      PGDATA: /var/lib/postgresql/data/
   web:
     image: zabbix/zabbix-web-nginx-pgsql:alpine-5.2-latest
     networks: 

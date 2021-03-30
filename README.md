@@ -26,3 +26,8 @@
     Acessar no navegador:
 
     10.0.0.3:8080
+
+#### Para efetuar o backup das informações do container
+
+    sudo docker cp d983b7ca27f3:/data/wwwroot/zabbix ./backup/
+
