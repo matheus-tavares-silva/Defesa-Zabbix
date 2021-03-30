@@ -7,13 +7,10 @@ services:
         ipv4_address: 10.0.0.1
     container_name: postgres-server
     restart: always
-    environment:
-      POSTGRES_USER: zabbix
-      POSTGRES_PASSWORD: zabbix@545416
-      POSTGRES_DB: zabbix
+    env_file:
+      - ./env/db.env
     volumes:
-      - ./db/db:/var/lib/postgresql/data/:rw
-      - ./backup/:/data/wwwroot/zabbix:rw
+      - ./data:/var/lib/postgresql/data/:rw
   srv:
     image: zabbix/zabbix-server-pgsql:alpine-5.2-latest
     networks: 
@@ -21,12 +18,8 @@ services:
         ipv4_address: 10.0.0.2
     container_name: zabbix-server-pgsql
     restart: always
-    environment: 
-      DB_SERVER_HOST: 10.0.0.1
-      POSTGRES_USER: zabbix
-      POSTGRES_PASSWORD: zabbix@545416
-      POSTGRES_DB: zabbix
-      PGDATA: /var/lib/postgresql/data/
+    env_file:
+      - ./env/srv.env
   web:
     image: zabbix/zabbix-web-nginx-pgsql:alpine-5.2-latest
     networks: 
@@ -34,13 +27,8 @@ services:
         ipv4_address: 10.0.0.3
     container_name: zabbix-web-nginx-pgsql
     restart: always
-    environment: 
-      ZBX_SERVER_HOST: 10.0.0.2
-      DB_SERVER_HOST: 10.0.0.1
-      POSTGRES_USER: zabbix
-      POSTGRES_PASSWORD: zabbix@545416
-      POSTGRES_DB: zabbix
-      PHP_TZ: America/Cuiaba
+    env_file:
+      - ./env/web.env
     ports: 
       - 443:8443
       - 80:8080
