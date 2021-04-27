@@ -10,7 +10,7 @@ services:
     env_file:
       - ./env/db.env
     volumes:
-      - ./data:/var/lib/postgresql/data/:rw
+      - nfs:/var/lib/postgresql/data/
   srv:
     image: zabbix/zabbix-server-pgsql:alpine-5.2-latest
     networks: 
@@ -33,6 +33,13 @@ services:
       - 443:8443
       - 80:8080
 
+volumes:
+  nfs:
+    driver_opts:
+      type: nfs
+      o:  nfsvers=3,addr=10.100.0.1,rw,nolock,soft
+      device: ":/vol/vol_zabbix00/data"
+
 networks:
   zabbix-network:
     ipam:
@@ -40,4 +47,3 @@ networks:
       config:
         - subnet: "10.0.0.0/24"
           gateway: "10.0.0.254"
-        

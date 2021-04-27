@@ -29,5 +29,5 @@
 
 #### Para efetuar o backup das informações do container
 
-    sudo docker cp d983b7ca27f3:/data/wwwroot/zabbix ./backup/
+    sudo docker cp <container_id>:/data/wwwroot/zabbix ./backup/
 
